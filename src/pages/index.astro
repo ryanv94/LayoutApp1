@@ -1,0 +1,101 @@
+---
+import Base from '../layouts/Base.astro';
+import DropZone from '../components/DropZone.astro';
+import ErrorBox from '../components/ErrorBox.astro';
+import NumberField from '../components/NumberField.astro';
+import Select from '../components/Select.astro';
+import Segmented from '../components/Segmented.astro';
+import Slider from '../components/Slider.astro';
+import FilmStrip from '../components/FilmStrip.astro';
+import { PRESETS } from '../tools/layout/logic';
+const groups = ['ISO', 'Inch', 'Metric'] as const;
+const groupLabel = { ISO: 'ISO A-series', Inch: 'Inch standards', Metric: 'Metric standards' };
+---
+<Base>
+  <div class="workspace">
+    <div class="controls stack">
+      <section class="panel develop" style="--i:1">
+        <h2 class="panel-title">Photos</h2>
+        <DropZone />
+        <ErrorBox />
+        <p class="hint" id="count-hint">0 of 6–10 photos</p>
+      </section>
+
+      <section class="panel develop" style="--i:2">
+        <h2 class="panel-title">Canvas</h2>
+        <div class="stack">
+          <Segmented id="unit" label="Units" value="mm" options={[{ value: 'mm', label: 'mm' }, { value: 'in', label: 'inches' }]} />
+          <Select id="preset" label="Preset">
+            {groups.map((g) => (
+              <optgroup label={groupLabel[g]}>
+                {PRESETS.filter((p) => p.group === g).map((p) => <option value={p.id}>{p.label}</option>)}
+              </optgroup>
+            ))}
+            <option value="custom">Custom</option>
+          </Select>
+          <div class="row">
+            <NumberField id="w" label="Width" value={210} min={1} />
+            <NumberField id="h" label="Height" value={297} min={1} />
+            <button type="button" class="btn btn-ghost" id="flip" aria-label="Swap width and height">⇄ Flip</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel develop" style="--i:3">
+        <h2 class="panel-title">Print</h2>
+        <div class="row">
+          <Select id="dpi-preset" label="Resolution">
+            <option value="150">150 · draft</option>
+            <option value="240">240 · good</option>
+            <option value="300" selected>300 · photo</option>
+            <option value="600">600 · fine</option>
+            <option value="custom">Custom</option>
+          </Select>
+          <NumberField id="dpi" label="DPI" value={300} min={36} max={1200} step={1} />
+        </div>
+        <p class="hint">Output: <b class="amber" id="readout">—</b></p>
+      </section>
+
+      <section class="panel develop" style="--i:4">
+        <h2 class="panel-title">Style</h2>
+        <div class="stack">
+          <Slider id="margin" label="Margin" min={0} max={50} step={1} value={10} />
+          <Slider id="gap" label="Gap" min={0} max={30} step={0.5} value={4} />
+          <Segmented id="bg" label="Background" value="#0B0A09" options={[
+            { value: '#0B0A09', label: 'Black', swatch: '#0B0A09' },
+            { value: '#F5F1EA', label: 'White', swatch: '#F5F1EA' },
+            { value: '#8A8176', label: 'Warm grey', swatch: '#8A8176' },
+          ]} />
+        </div>
+      </section>
+    </div>
+
+    <div class="viewer stack">
+      <section class="panel develop" style="--i:2">
+        <div class="stage-bar">
+          <h2 class="panel-title">Preview</h2>
+          <button type="button" class="btn" id="shuffle" disabled>↻ Shuffle layout</button>
+        </div>
+        <div class="stage" id="stage-wrap">
+          <p class="stage-empty" id="stage-empty">Your layout appears here.</p>
+          <canvas id="stage" aria-label="Layout preview" hidden></canvas>
+        </div>
+        <p class="hint">Drag a photo onto another to swap them. Star one as hero to give it centre stage.</p>
+        <FilmStrip />
+        <ul id="thumbs" class="thumbs" aria-label="Photos"></ul>
+      </section>
+
+      <section class="panel develop" style="--i:5">
+        <h2 class="panel-title">Export</h2>
+        <ErrorBox id="notice" kind="notice" />
+        <div class="row">
+          <button type="button" class="btn btn-primary" id="export-png" disabled>PNG</button>
+          <button type="button" class="btn btn-primary" id="export-jpg" disabled>JPEG</button>
+          <button type="button" class="btn btn-primary" id="export-pdf" disabled>PDF</button>
+        </div>
+        <p class="hint" id="export-status" role="status"></p>
+      </section>
+    </div>
+  </div>
+  <script>import '../tools/layout/ui';</script>
+</Base>

@@ -1,0 +1,5 @@
+---
+interface Props { code?: string }
+const { code = '▸ 07A' } = Astro.props;
+---
+<div class="filmstrip" aria-hidden="true"><span>{code}</span><span>▸ 08</span><span>▸ 08A</span><span>▸ 09</span></div>

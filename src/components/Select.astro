@@ -1,0 +1,8 @@
+---
+interface Props { id: string; label: string }
+const { id, label } = Astro.props;
+---
+<div class="field">
+  <label class="label" for={id}>{label}</label>
+  <select class="input" id={id}><slot /></select>
+</div>

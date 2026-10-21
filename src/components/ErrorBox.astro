@@ -1,0 +1,5 @@
+---
+interface Props { id?: string; kind?: 'error' | 'notice' }
+const { id = 'error', kind = 'error' } = Astro.props;
+---
+<div id={id} class={`msg msg-${kind}`} role={kind === 'error' ? 'alert' : 'status'} hidden></div>

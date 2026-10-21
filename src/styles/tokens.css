@@ -1,0 +1,14 @@
+:root {
+  --bg: #12100e;
+  --surface: #1c1916;
+  --surface-2: #26221e;
+  --line: #3a342d;
+  --text: #ede6da;
+  --text-dim: #a39a8c;
+  --accent: #e5352b;
+  --amber: #f2b544;
+  --ok: #8fbf6a;
+  --font-display: 'Fraunces Variable', Georgia, serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  color-scheme: dark;
+}

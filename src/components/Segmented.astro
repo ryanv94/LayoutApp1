@@ -1,0 +1,15 @@
+---
+interface Props { id: string; label: string; options: { value: string; label: string; swatch?: string }[]; value: string }
+const { id, label, options, value } = Astro.props;
+---
+<fieldset class="segmented" id={id}>
+  <legend class="label">{label}</legend>
+  <div class="seg-row">
+    {options.map((o) => (
+      <label class="seg">
+        <input type="radio" name={id} value={o.value} checked={o.value === value} />
+        <span>{o.swatch && <i class="swatch" style={`background:${o.swatch}`}></i>}{o.label}</span>
+      </label>
+    ))}
+  </div>
+</fieldset>

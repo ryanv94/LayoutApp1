@@ -1,0 +1,8 @@
+---
+interface Props { id: string; label: string; value: number; min?: number; max?: number; step?: number | string }
+const { id, label, value, min = 0, max, step = 'any' } = Astro.props;
+---
+<div class="field">
+  <label class="label" for={id}>{label}</label>
+  <input class="input" type="number" inputmode="decimal" id={id} value={value} min={min} max={max} step={step} />
+</div>
