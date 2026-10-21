@@ -4,7 +4,7 @@ import type { Page } from '@playwright/test';
 const photos = (n: number, from = 1) => Array.from({ length: n }, (_, i) => fixture(`photo-${from + i}.jpg`));
 
 async function load(page: Page, files: string[]) {
-  await page.goto('/?debug');
+  await page.goto('./?debug');
   await page.setInputFiles('#files', files);
   await expect(page.locator('#thumbs li')).toHaveCount(Math.min(files.length, 10));
   // render is rAF-deferred: wait for the first layout
@@ -36,7 +36,7 @@ test('more than 10 photos are rejected inline, first 10 kept', async ({ page }) 
 });
 
 test('HEIC and non-images are rejected but valid files are kept', async ({ page }) => {
-  await page.goto('/?debug');
+  await page.goto('./?debug');
   await page.setInputFiles('#files', [...photos(6), fixture('bad.heic'), fixture('notes.txt')]);
   await expect(page.locator('#thumbs li')).toHaveCount(6);
   await expect(page.locator('#error')).toContainText(/HEIC/);
@@ -71,7 +71,7 @@ test('shuffle changes the arrangement', async ({ page }) => {
 });
 
 test('flip swaps width and height', async ({ page }) => {
-  await page.goto('/?debug');
+  await page.goto('./?debug');
   await page.click('#flip');
   await expect(page.locator('#w')).toHaveValue('297');
   await expect(page.locator('#h')).toHaveValue('210');
@@ -79,7 +79,7 @@ test('flip swaps width and height', async ({ page }) => {
 });
 
 test('preset sets size; custom entry switches preset to custom', async ({ page }) => {
-  await page.goto('/?debug');
+  await page.goto('./?debug');
   await page.selectOption('#preset', 'a3');
   await expect(page.locator('#w')).toHaveValue('297');
   await expect(page.locator('#h')).toHaveValue('420');
@@ -88,7 +88,7 @@ test('preset sets size; custom entry switches preset to custom', async ({ page }
 });
 
 test('unit switch keeps the physical size', async ({ page }) => {
-  await page.goto('/?debug');
+  await page.goto('./?debug');
   await page.locator('#unit label', { hasText: 'inches' }).click();
   expect(Number(await page.inputValue('#w'))).toBeCloseTo(8.268, 2);
   await page.locator('#unit label', { hasText: 'mm' }).click();
@@ -209,7 +209,7 @@ async function slow(page: Page, ms = 250) {
 
 test('uploads decode one full-size photo at a time', async ({ page }) => {
   await slow(page, 30);
-  await page.goto('/?debug');
+  await page.goto('./?debug');
   await page.setInputFiles('#files', photos(8));
   await expect(page.locator('#thumbs li')).toHaveCount(8);
   expect(await page.evaluate(() => (window as any).__maxFull)).toBe(1);
@@ -217,7 +217,7 @@ test('uploads decode one full-size photo at a time', async ({ page }) => {
 
 test('two quick adds never exceed 10 photos', async ({ page }) => {
   await slow(page);
-  await page.goto('/?debug');
+  await page.goto('./?debug');
   await page.setInputFiles('#files', photos(4));
   await page.setInputFiles('#files', photos(6, 5));
   await page.setInputFiles('#files', photos(6, 5));
@@ -246,7 +246,7 @@ test('export buttons stay disabled while an export runs, even after settings cha
 
 test('removing a photo mid-export does not break the export', async ({ page }) => {
   await slow(page, 200);
-  await page.goto('/?debug');
+  await page.goto('./?debug');
   await page.setInputFiles('#files', photos(8));
   await expect(page.locator('#thumbs li')).toHaveCount(8);
   await page.selectOption('#preset', 'a6');
